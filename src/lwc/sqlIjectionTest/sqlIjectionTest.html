@@ -1,0 +1,92 @@
+<!--
+ - Created by Adelchi on 18/01/2022.
+ -->
+
+<!-- Sql  Injection  Test -->
+<template>
+    <label for="d" class="slds-text-heading_small">Search for Contact - Double wildcards </label>
+    <template if:true={error}>
+        <div class="alert" >
+            <span class="closebtn" onclick={close}>x</span>
+            <template for:each={error} for:item="err">
+                <p key={err}>{err}</p>
+            </template>
+        </div>
+    </template>
+    <lightning-input class="slds-m-bottom_xx-large" id="d" value={searchKey} label=" " placeholder="name here" onkeyup={handleSearch}></lightning-input>
+    <template if:true={contacts}>
+        <div class="slds-list_horizontal slds-m-bottom_xx-large">
+            <template for:each={contacts} for:item="contact">
+                <div key={contact.Id} class="slds-m-right_large">{contact.FirstName}</div>
+            </template>
+        </div>
+    </template>
+    <label for="reg" class="slds-text-heading_small">Search for Contact - Regex Only word Characters</label>
+    <template if:true={errorReg}>
+        <div class="alert" >
+            <span class="closebtn" onclick={closeReg}>x</span>
+            <template for:each={errorReg} for:item="err">
+                <p key={err}>{err}</p>
+            </template>
+        </div>
+    </template>
+    <lightning-input class="slds-m-bottom_xx-large"  id="reg" value={searchKeyReg} label="" placeholder="name here" onkeyup={handleSearchReg}></lightning-input>
+    <template if:true={contactsReg}>
+        <div class="slds-list_horizontal slds-m-bottom_xx-large">
+            <template for:each={contactsReg} for:item="contact">
+                <div key={contact.Id} class="slds-m-right_large">{contact.FirstName}</div>
+            </template>
+        </div>
+    </template>
+    <label for="t" class="slds-text-heading_small">Search for Contact - Trailing wildcard</label>
+    <template if:true={errorTW}>
+        <div class="alert" >
+            <span class="closebtn" onclick={closeTW}>x</span>
+            <template for:each={errorTW} for:item="err">
+                <p key={err}>{err}</p>
+            </template>
+        </div>
+    </template>
+    <lightning-input class="slds-m-bottom_xx-large"  id="t" value={searchKeyTW} label="" placeholder="name here" onkeyup={handleSearchTW}></lightning-input>
+    <template if:true={contactsTW}>
+        <div class="slds-list_horizontal slds-m-bottom_xx-large">
+            <template for:each={contactsTW} for:item="contact">
+                <div key={contact.Id} class="slds-m-right_large">{contact.FirstName}</div>
+            </template>
+        </div>
+    </template>
+    <label for="l" class="slds-text-heading_small">Search for Contact - Leading wildcard</label>
+    <template if:true={errorLW}>
+        <div class="alert" >
+            <span class="closebtn" onclick={closeLW}>x</span>
+            <template for:each={errorLW} for:item="err">
+                <p key={err}>{err}</p>
+            </template>
+        </div>
+    </template>
+    <lightning-input class="slds-m-bottom_xx-large" id="l" value={searchKeyLW} label="" placeholder="name here" onkeyup={handleSearchLW}></lightning-input>
+    <template if:true={contactsLW}>
+        <div class="slds-list_horizontal slds-m-bottom_xx-large">
+            <template for:each={contactsLW} for:item="contact">
+                <div key={contact.Id} class="slds-m-right_large">{contact.FirstName}</div>
+            </template>
+        </div>
+    </template>
+    <label for="b" class="slds-text-heading_small">Search for Active Users - Boolean</label>
+    <template if:true={errorLW}>
+        <div class="alert" >
+            <span class="closebtn" onclick={closeLW}>x</span>
+            <template for:each={errorLW} for:item="err">
+                <p key={err}>{err}</p>
+            </template>
+        </div>
+    </template>
+    <lightning-input class="slds-m-bottom_xx-large" id="b" value={searchKeyB} label="" placeholder="string here" onkeyup={handleSearchB}></lightning-input>
+    <template if:true={usersB}>
+        <div class="slds-list_horizontal slds-m-bottom_xx-large">
+            <template for:each={usersB} for:item="contact">
+                <div key={contact.Id} class="slds-m-right_large">{contact.Name}</div>
+            </template>
+        </div>
+    </template>
+</template>

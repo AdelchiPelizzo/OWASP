@@ -1,0 +1,44 @@
+<!--
+ - Created by Adelchi on 25/01/2022.
+ -->
+
+<!-- xml Injection -->
+<template>
+    <lightning-card title="XML Injection Test" >
+        <template if:true={error}>
+            <div class="alert" >
+                <span class="closebtn" onclick={close}>x</span>
+                    <p>{error}</p>
+            </div>
+        </template>
+        <div class="slds-m-around_medium">
+            <div>
+                <table>
+                    <tr>
+                        <td>
+                            <lightning-input class="slds-m-bottom_xx-large" id="fn" label=" First Name " placeholder="first name here" onkeyup={setFirstName} ></lightning-input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <lightning-input class="slds-m-bottom_xx-large" id="ln" label="Last Name " placeholder="last name here" onkeyup={setLastName} ></lightning-input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <lightning-input class="slds-m-bottom_xx-large" id="em" label="Email " placeholder="email here" onkeyup={setEmail} ></lightning-input>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <lightning-button-group >
+                <div>
+                    <lightning-button variant="brand" onclick={buildXMLandSendOvl} label="Send" ></lightning-button>
+                </div>
+                <div class="slds-m-left_large">
+                    <lightning-button variant="brand" onclick={buildXMLandSend} label="Just Send" ></lightning-button>
+                </div>
+            </lightning-button-group>
+        </div>
+    </lightning-card>
+</template>
