@@ -50,11 +50,11 @@ public with sharing class XMLtool {
 
         for ( Dom.XMLNode childElement : root.getChildElements() ) {
             for ( Dom.XMLNode detailElement : childElement.getChildElements() ) {
-                if (detailElement.getName() == 'firstName' &&  !detailElement.getText().containsAny('</\\>')) {
+                if (detailElement.getName() == 'firstName' &&  !detailElement.getText().containsAny('</\\>-')) {
                     contact.FirstName = detailElement.getText();
-                } else if (detailElement.getName() == 'lastName' &&  !detailElement.getText().containsAny('</\\>')) {
+                } else if (detailElement.getName() == 'lastName' &&  !detailElement.getText().containsAny('</\\>-')) {
                     contact.lastName = detailElement.getText();
-                } else if (detailElement.getName() == 'email' &&  !detailElement.getText().containsAny('</\\>')) {
+                } else if (detailElement.getName() == 'email' &&  !detailElement.getText().containsAny('</\\>-')) {
                     contact.Email = detailElement.getText();
                 } else {
                     throw new AuraHandledException('XML Not Valid');
@@ -89,21 +89,21 @@ public with sharing class XMLtool {
             doc.load(xmlString);
             Dom.XmlNode contactRoot = doc.getRootElement();
             Contact contact = new Contact();
-            if(!contactRoot.getChildElement('firstName', null).getText().containsAny('</\\>')){
+            if(!contactRoot.getChildElement('firstName', null).getText().containsAny('</\\>-')){
                 contact.FirstName = contactRoot.getChildElement('firstName', null).getText();
             }else {
-                throw new AuraHandledException('XML Not Valid '+ contactRoot.getChildElement('firstName', null).getText());
+                throw new AuraHandledException('XML parsed but Not Valid for firstName field '+ contactRoot.getChildElement('firstName', null).getText());
             }
-            if(!contactRoot.getChildElement('lastName', null).getText().containsAny('</\\>')){
+            if(!contactRoot.getChildElement('lastName', null).getText().containsAny('</\\>-')){
                 contact.LastName = contactRoot.getChildElement('lastName', null).getText();
             }else {
-                throw new AuraHandledException('XML Not Valid '+ contactRoot.getChildElement('firstName', null).getText());
+                throw new AuraHandledException('XML parsed but Not Valid for lastName field'+ contactRoot.getChildElement('lastName', null).getText());
             }
-            if(!contactRoot.getChildElement('email', null).getText().containsAny('</\\>')){
+            if(!contactRoot.getChildElement('email', null).getText().containsAny('</\\>-')){
                 contact.Email = contactRoot.getChildElement('email', null).getText();
-            }else {
-                throw new AuraHandledException('XML Not Valid '+ contactRoot.getChildElement('firstName', null).getText());
+                throw new AuraHandledException('XML parsed but Not Valid for email field '+ contactRoot.getChildElement('email', null).getText());
             }
+
             insert contact;
             return contact;
         } catch ( System.XmlException e){
