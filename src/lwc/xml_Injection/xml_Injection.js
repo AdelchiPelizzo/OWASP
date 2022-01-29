@@ -5,6 +5,7 @@
 import {LightningElement, api, wire, track} from 'lwc' ;
 import addContact from '@salesforce/apex/XMLtool.addContactViaXML';
 import addContactOvl from '@salesforce/apex/XMLtool.addContactViaXMLOverload';
+import addContactBuildOnServer from '@salesforce/apex/XMLtool.addContactBuildEscapeXML';
 
 export default class xmlInjection extends LightningElement {
 
@@ -32,13 +33,13 @@ export default class xmlInjection extends LightningElement {
         '</contact>';
 
 
-    @api
+    @track
     firstName;
 
-    @api
+    @track
     lastName;
 
-    @api
+    @track
     email;
 
     @api
@@ -46,6 +47,9 @@ export default class xmlInjection extends LightningElement {
 
     @api
     error;
+
+    @api
+    wait = false;
 
     setFirstName(event){
         this.firstName = event.target.value;
@@ -63,6 +67,14 @@ export default class xmlInjection extends LightningElement {
         this.error = '';
     }
 
+    closeWait(){
+        this.wait = false;
+    }
+
+    closeContact(){
+        this.contacts = '';
+    }
+
     buildXMLandSendOvl(){
 
         this.XMLContactString =
@@ -74,6 +86,32 @@ export default class xmlInjection extends LightningElement {
 
         addContactOvl({xmlString: this.XMLContactString}).then(result => {
             this.contacts = result;
+        }).catch(error => {
+            console.log(error);
+            this.error = error.body.message;
+        });
+
+    }
+
+    addContactBuildOnSer(){
+
+        let inputLst = [];
+
+        inputLst[0] = this.firstName;
+        inputLst[1] = this.lastName;
+        inputLst[2] = this.email;
+
+        this.wait = true;
+
+        let el = this.template.querySelectorAll('lightning-input');
+        for(let i = 0; i < el.length; i++){
+            el[i].value  = '';
+        }
+
+        addContactBuildOnServer({inputList: inputLst}).then(result => {
+            console.log('sending to server');
+            this.contacts = result;
+            this.wait = false;
         }).catch(error => {
             console.log(error);
             this.error = error.body.message;

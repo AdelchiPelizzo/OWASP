@@ -11,32 +11,50 @@
                     <p>{error}</p>
             </div>
         </template>
+
+        <template if:true={contacts}>
+            <div class="show" >
+                <span class="closebtn" onclick={closeContact}>x</span>
+                    <p>{contacts.FirstName}</p>
+                    <p>{contacts.LastName}</p>
+                    <p>{contacts.Email}</p>
+            </div>
+        </template>
+        <template if:true={wait}>
+            <div class="show" >
+                <span class="closebtn" onclick={closeWait}>x</span>
+                <p>wait ...</p>
+            </div>
+        </template>
         <div class="slds-m-around_medium">
             <div>
                 <table>
                     <tr>
                         <td>
-                            <lightning-input class="slds-m-bottom_xx-large" id="fn" label=" First Name " placeholder="first name here" onkeyup={setFirstName} ></lightning-input>
+                            <lightning-input class="slds-m-bottom_xx-large" id="fn" data-id="fn" label=" First Name " placeholder="first name here" onkeyup={setFirstName} ></lightning-input>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <lightning-input class="slds-m-bottom_xx-large" id="ln" label="Last Name " placeholder="last name here" onkeyup={setLastName} ></lightning-input>
+                            <lightning-input class="slds-m-bottom_xx-large" id="ln" data-id="ln" label="Last Name " placeholder="last name here" onkeyup={setLastName} ></lightning-input>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <lightning-input class="slds-m-bottom_xx-large" id="em" label="Email " placeholder="email here" onkeyup={setEmail} ></lightning-input>
+                            <lightning-input class="slds-m-bottom_xx-large" id="em" data-id="em" label="Email " placeholder="email here" onkeyup={setEmail} ></lightning-input>
                         </td>
                     </tr>
                 </table>
             </div>
             <lightning-button-group >
                 <div>
-                    <lightning-button variant="brand" onclick={buildXMLandSendOvl} label="Send" ></lightning-button>
+                    <lightning-button variant="brand" onclick={buildXMLandSendOvl} label="Send - XML CLIENT build" ></lightning-button>
                 </div>
                 <div class="slds-m-left_large">
-                    <lightning-button variant="brand" onclick={buildXMLandSend} label="Just Send" ></lightning-button>
+                    <lightning-button variant="brand" onclick={addContactBuildOnSer} label="Send - XML SERVER build" ></lightning-button>
+                </div>
+                <div class="slds-m-left_large">
+                    <lightning-button variant="brand" onclick={buildXMLandSend} label="Send - XML file" ></lightning-button>
                 </div>
             </lightning-button-group>
         </div>

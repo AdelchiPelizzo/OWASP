@@ -36,7 +36,6 @@ public with sharing class XMLtool {
                 '</contact>'+
             '</contacts>';
 
-
     @AuraEnabled
     public static List<Contact> addContactViaXML(){
         List<Contact> contactList = new List<Contact>();
@@ -53,7 +52,7 @@ public with sharing class XMLtool {
                 if (detailElement.getName() == 'firstName' &&  !detailElement.getText().containsAny('</\\>-')) {
                     contact.FirstName = detailElement.getText();
                 } else if (detailElement.getName() == 'lastName' &&  !detailElement.getText().containsAny('</\\>-')) {
-                    contact.lastName = detailElement.getText();
+                    contact.LastName = detailElement.getText();
                 } else if (detailElement.getName() == 'email' &&  !detailElement.getText().containsAny('</\\>-')) {
                     contact.Email = detailElement.getText();
                 } else {
@@ -64,20 +63,62 @@ public with sharing class XMLtool {
             contact = new Contact();
         }
         insert contactList;
-
-
-//        for ( Dom.XmlNode c : root.getChildElements() ) {
-//            contact.FirstName = c.getChildElement('firstName', null).getText();
-//            contact.LastName =  c.getChildElement('lastName', null).getText();
-//            contact.Email =  c.getChildElement('email', null).getText();
-//            contactList.add(contact);
-//            contact = new Contact();
-//        }
-//        for(Contact c : contactList){
-//            System.debug(c);
-//        }
-//        insert contactList;
         return contactList;
+    }
+
+    @AuraEnabled
+    public static Contact addContactBuildEscapeXML(List<String> inputList){
+
+        System.debug(inputList);
+
+        Dom.Document dd = new Dom.Document();
+        Dom.XmlNode contacts = dd.createRootElement('contacts', null, null);
+        Dom.XmlNode body1 = contacts.addChildElement('contact', null, null);
+        Dom.XmlNode body11 = body1.addChildElement('firstName', null, null);
+        body11.addTextNode(String.escapeSingleQuotes(inputList[0]));
+        Dom.XmlNode body12 = body1.addChildElement('lastName', null, null);
+        body12.addTextNode(String.escapeSingleQuotes(inputList[1]));
+        Dom.XmlNode body13 = body1.addChildElement('email', null, null);
+        body13.addTextNode(String.escapeSingleQuotes(inputList[2]));
+
+        String toParse =
+            '<contact>' +
+                '<firstName>'+inputList[0].escapeXml()+'</firstName>' +
+                '<lastName>'+inputList[1].escapeXml()+'</lastName>' +
+                '<email>'+inputList[2].escapeXml()+'</email>' +
+            '</contact>';
+        System.debug(toParse);
+        System.debug(dd.toXmlString());
+
+        try {
+            Dom.XmlNode contactRoot = dd.getRootElement();
+            List<DOM.XmlNode> n = contactRoot.getChildren();
+            Contact contact = new Contact();
+            for(DOM.XmlNode nd : n){
+                if(!nd.getChildElement('firstName', null).getText().containsAny('</\\>-')){
+                    contact.FirstName = nd.getChildElement('firstName', null).getText();
+                }else {
+                    throw new AuraHandledException('XML parsed but Not Valid for firstName field '+ nd.getChildElement('firstName', null).getText());
+                }
+                if(!nd.getChildElement('lastName', null).getText().containsAny('</\\>-')){
+                    contact.LastName = nd.getChildElement('lastName', null).getText();
+                }else {
+                    throw new AuraHandledException('XML parsed but Not Valid for lastName field'+ nd.getChildElement('lastName', null).getText());
+                }
+                if(!nd.getChildElement('email', null).getText().containsAny('</\\>-')){
+                    contact.Email = nd.getChildElement('email', null).getText();
+                }else{
+                    throw new AuraHandledException('XML parsed but Not Valid for email field'+ nd.getChildElement('email', null).getText());
+                }
+
+            }
+            insert contact;
+            return contact;
+        } catch ( System.XmlException e){
+            throw new AuraHandledException('XML Not Valid \n- '+ e.getTypeName()+'\n - '+e.getMessage()+'\n - '+e.getStackTraceString());
+        }finally{
+            System.debug('NO BREXIT');
+        }
     }
 
 
@@ -108,6 +149,15 @@ public with sharing class XMLtool {
             return contact;
         } catch ( System.XmlException e){
             throw new AuraHandledException('XML Not Valid \n- '+ e.getTypeName()+'\n - '+e.getMessage()+'\n - '+e.getStackTraceString());
+        }finally{
+            System.debug('NO BREXIT');
         }
+
     }
+
+    public static void deleteTodayContacts(){
+        List<Contact> lsC = [SELECT Id FROM Contact WHERE  CreatedDate = TODAY];
+        delete lsC;
+    }
+
 }
